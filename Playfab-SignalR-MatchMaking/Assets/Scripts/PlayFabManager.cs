@@ -16,6 +16,8 @@ public class PlayFabManager : MonoBehaviour
     public static string EntityId,SessionTicket;
     string encryptedPassword;
 
+    public static string PlayerUsername;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -41,16 +43,18 @@ public class PlayFabManager : MonoBehaviour
 
     public void SignUp(string Email , string Password,string Username )
     {
-        // Debug.Log(username.text);
-        var registerRequest = new RegisterPlayFabUserRequest { Email = Email, Password = Encrypt(Password), Username = Username };
+        var registerRequest = new RegisterPlayFabUserRequest { Email = Email, Password = Encrypt(Password), Username = Username,DisplayName = Username };
         PlayFabClientAPI.RegisterPlayFabUser(registerRequest, RegisterSuccess, RegisterFailure);
+        PlayerUsername = Username;
     }
 
     void RegisterSuccess(RegisterPlayFabUserResult result)
     {
         SessionTicket = result.SessionTicket;
         EntityId = result.EntityToken.Entity.Id;
-        SceneManager.LoadScene("Gameplay");
+        
+        SignalRConnection.instance.RegisterOnline();
+        SceneManager.LoadSceneAsync("Gameplay");
     }
 
     void RegisterFailure(PlayFabError error)
@@ -77,7 +81,10 @@ public class PlayFabManager : MonoBehaviour
         SessionTicket = login.SessionTicket;
         EntityId = login.EntityToken.Entity.Id;
         Debug.Log("Logged In SuccessFully");
-        SceneManager.LoadScene("Gameplay");
+        PlayerUsername = login.InfoResultPayload.PlayerProfile.DisplayName;
+        SignalRConnection.instance.RegisterOnline();
+        SceneManager.LoadSceneAsync("Gameplay");
+
     }
     #endregion
 

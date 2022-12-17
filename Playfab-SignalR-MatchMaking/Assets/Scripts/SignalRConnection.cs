@@ -15,7 +15,7 @@ public class SignalRConnection : MonoBehaviour
     // SignalR variables
 
     //Make Sure you replace the uri with your own
-    private static Uri uri = new Uri("Localhost:5000/Gamehub");//To be replaced with your own uri
+    private static Uri uri = new Uri("localhost:5000/Gamehub");//To be replaced with your own uri
 
     public static SignalRConnection instance;
 
@@ -26,7 +26,7 @@ public class SignalRConnection : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(this);
-        Connect();
+       // Connect();
     }
 
     // Connect to the SignalR server
@@ -56,10 +56,22 @@ public class SignalRConnection : MonoBehaviour
 
    }
 
+   public async void RegisterOnline(){
+    await connection.InvokeAsync<string>("RegisterPlayerOnline",PlayFabManager.PlayerUsername);
+   }
 
-    public async void Disconnect(string Queue)
+   public async void SendFriendRequest(string Name){
+
+   }
+
+
+
+    private void OnApplicationQuit(){
+        Disconnect();
+    }
+    public async void Disconnect()
     {
-        await connection.InvokeAsync<string>("RemoveFromQueue", Queue);
+        await connection.InvokeAsync<string>("DeRegisterPlayerOnline",PlayFabManager.PlayerUsername);
         await connection.StopAsync();
     }
 }

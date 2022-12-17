@@ -10,23 +10,23 @@ public class DebugScript : MonoBehaviour
     {
         if (isDebug)
         {
-            if (GUI.Button(new Rect(20, 0, 150, 30), "Login as Daxx"))
+            if (GUI.Button(new Rect(20, 0, 150, 30), "Login as TestUser 1"))
             {
-              //  PlayFabManager.instance.SignUp("dhakaddaksh123@gmail.com", "Daksh123/","Daxx");
-                 PlayFabManager.instance.Login("dhakaddaksh123@gmail.com", "Daksh123/");
+                //PlayFabManager.instance.SignUp("UserOne@gmail.com", "User123/","UserOne");
+                PlayFabManager.instance.Login("UserOne@gmail.com", "User123/");
+            }
+            if (GUI.Button(new Rect(20, 50, 150, 30), "Login as TestUser 2"))
+            {
+               // PlayFabManager.instance.SignUp("UserTwo@gmail.com", "User123/","UserTwo");
+                PlayFabManager.instance.Login("UserTwo@gmail.com", "User123/");
+            }
+            if (GUI.Button(new Rect(20, 100, 150, 30), "Login as TestUser 3"))
+            {
+                //PlayFabManager.instance.SignUp("UserThree@gmail.com", "User123/","UserThree");
+                PlayFabManager.instance.Login("UserThree@gmail.com", "User123/");
             }
 
-            if (GUI.Button(new Rect(20, 50, 150, 30), "Login as MyBoy"))
-            {
-               // PlayFabManager.instance.SignUp("MyBoy69@gmail.com", "MyBoy123","MyBoy");
-                 PlayFabManager.instance.Login("MyBoy69@gmail.com", "MyBoy123");
-            }
-
-            if (GUI.Button(new Rect(20, 100, 150, 30), "Login as JP00"))
-            {
-                //PlayFabManager.instance.SignUp("jpGord00@gmail.com", "JP123/","JP00");
-                PlayFabManager.instance.Login("jpGord00@gmail.com", "JP123/");
-            }
+           
 
           /*  if (GUI.Button(new Rect(20, 150, 150, 30), "Login as Other"))
             {

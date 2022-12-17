@@ -2,6 +2,20 @@
 
 public class GameHub : Hub
 {
+
+    const string OnlinePlayersGroupName ="OnlinePlayers";
+    public Dictionary<string,string> OnlinePlayers = new Dictionary<string,string>();
+
+
+    public async Task RegisterPlayerOnline(string PlayerUserName){
+        await Groups.AddToGroupAsync(Context.ConnectionId,OnlinePlayersGroupName);
+        OnlinePlayers.Add(PlayerUserName,Context.ConnectionId);
+    }
+
+    public async async DeRegisterPlayerOnline(string PlayerUserName){
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId,OnlinePlayersGroupName);
+        OnlinePlayers.Remove(PlayerUserName);
+    }
     public async Task SendDataToGroup(string data, string GroupName)
     {
         await Clients.Group(GroupName).SendAsync("GamePlayData", data);
@@ -16,6 +30,14 @@ public class GameHub : Hub
     public async Task RemoveFromQueue(string ChannelName)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, ChannelName);
+    }
+
+    public async Task SendFriendRequest(string Name){
+        //To Do
+    }
+
+    public async Task SendBackConfirmation(string Name){
+        //To Do
     }
 
 }

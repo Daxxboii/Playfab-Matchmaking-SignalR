@@ -129,6 +129,5 @@ public class MatchMaking : MonoBehaviour
     {
         Debug.Log("Ticket Cancelled");
         
-        SignalRConnection.instance.Disconnect(Queue);
     }
 }

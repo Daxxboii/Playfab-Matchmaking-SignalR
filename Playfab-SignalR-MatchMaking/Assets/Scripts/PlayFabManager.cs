@@ -44,7 +44,7 @@ public class PlayFabManager : MonoBehaviour
     public void SignUp(string Email , string Password,string Username )
     {
         var registerRequest = new RegisterPlayFabUserRequest { Email = Email, Password = Encrypt(Password), Username = Username,DisplayName = Username };
-        PlayFabClientAPI.RegisterPlayFabUser(registerRequest, RegisterSuccess, RegisterFailure);
+        PlayFabClientAPI.RegisterPlayFabUser(registerRequest, RegisterSuccess, PlayFabErrorLog);
         PlayerUsername = Username;
     }
 
@@ -57,10 +57,7 @@ public class PlayFabManager : MonoBehaviour
         SceneManager.LoadSceneAsync("Gameplay");
     }
 
-    void RegisterFailure(PlayFabError error)
-    {
-       UnityEngine.Debug.LogWarning(error);
-    }
+   
 
     public void Login(string Email, string Password)
     {
@@ -69,11 +66,7 @@ public class PlayFabManager : MonoBehaviour
             GetPlayerProfile = true
         }
         };
-        PlayFabClientAPI.LoginWithEmailAddress(request, LoginSuccess, loginFailure);
-    }
-    void loginFailure(PlayFabError error)
-    {
-      UnityEngine.Debug.LogWarning(error);
+        PlayFabClientAPI.LoginWithEmailAddress(request, LoginSuccess, PlayFabErrorLog);
     }
 
     void LoginSuccess(LoginResult login)
@@ -84,8 +77,23 @@ public class PlayFabManager : MonoBehaviour
         PlayerUsername = login.InfoResultPayload.PlayerProfile.DisplayName;
         SignalRConnection.instance.RegisterOnline();
         SceneManager.LoadSceneAsync("Gameplay");
-
     }
     #endregion
+
+    public void OnFriendRequestAccepted(string name)
+    {
+        var request = new AddFriendRequest { FriendTitleDisplayName = name };
+        PlayFabClientAPI.AddFriend(request, OnFriendAddedSuccess, PlayFabErrorLog);
+    }
+
+    void OnFriendAddedSuccess(AddFriendResult result) 
+    { 
+    
+    }
+
+    void PlayFabErrorLog(PlayFabError error)
+    {
+        UnityEngine.Debug.LogError(error);
+    }
 
 }

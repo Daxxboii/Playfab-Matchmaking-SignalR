@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &79029675
 Transform:
   m_ObjectHideFlags: 0
@@ -170,6 +170,11 @@ MonoBehaviour:
   HomePanel: {fileID: 0}
   FriendsPanel: {fileID: 0}
   MatchMakingPanel: {fileID: 0}
+  GlobalPlayersPanel: {fileID: 0}
+  OpenFriendsPanelButton: {fileID: 0}
+  OpenMatchMakingPanelButton: {fileID: 0}
+  OpenGlobalPlayersButton: {fileID: 0}
+  PlayerInfoPanelPrefab: {fileID: 0}
 --- !u!1 &446956728
 GameObject:
   m_ObjectHideFlags: 0
@@ -1410,7 +1415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2135015199
 MonoBehaviour:
   m_ObjectHideFlags: 0

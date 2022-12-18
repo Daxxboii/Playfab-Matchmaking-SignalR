@@ -15,7 +15,7 @@ public class SignalRConnection : MonoBehaviour
     // SignalR variables
 
     //Make Sure you replace the uri with your own
-    private static Uri uri = new Uri("localhost:5000/Gamehub");//To be replaced with your own uri
+    private static Uri uri = new Uri("https://localhost:7002/Gamehub");//To be replaced with your own uri
 
     public static SignalRConnection instance;
 
@@ -26,7 +26,7 @@ public class SignalRConnection : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(this);
-       // Connect();
+        Connect();
     }
 
     // Connect to the SignalR server
@@ -44,9 +44,15 @@ public class SignalRConnection : MonoBehaviour
         connection.On<string>("GamePlayData", (data) =>
         {
             dynamic DeserializedData = JsonConvert.DeserializeObject(data);
+            Debug.Log("List of players:");
             Debug.Log(DeserializedData);
         });
 
+        connection.On<Dictionary<string,string>>("ListOfOnlinePlayers", (data) =>
+        {
+          //  dynamic DeserializeData = JsonConvert.DeserializeObject(data);
+            Debug.Log(data);
+        });
 
     }
 
@@ -57,13 +63,21 @@ public class SignalRConnection : MonoBehaviour
    }
 
    public async void RegisterOnline(){
+        Debug.Log(PlayFabManager.PlayerUsername);
     await connection.InvokeAsync<string>("RegisterPlayerOnline",PlayFabManager.PlayerUsername);
+        Debug.Log("player Online");
    }
 
    public async void SendFriendRequest(string Name){
 
    }
 
+    [ButtonMethod]
+    public async void FetchAllOnlinePlayers()
+    {
+        await connection.InvokeAsync<string>("SendAllOnlinePlayers", PlayFabManager.PlayerUsername);
+
+    }
 
 
     private void OnApplicationQuit(){
@@ -72,6 +86,7 @@ public class SignalRConnection : MonoBehaviour
     public async void Disconnect()
     {
         await connection.InvokeAsync<string>("DeRegisterPlayerOnline",PlayFabManager.PlayerUsername);
+        Debug.Log("Player Offline");
         await connection.StopAsync();
     }
 }

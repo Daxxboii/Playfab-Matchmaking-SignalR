@@ -25,8 +25,6 @@ public class PlayerDataPanel : MonoBehaviour
         SignalRConnection.instance.SendFriendRequest(this.Username);
     }
 
-
-
     public void SetFriendRequestButtonState(bool state){
         SendFriendRequestButton.interactable = state;
     }

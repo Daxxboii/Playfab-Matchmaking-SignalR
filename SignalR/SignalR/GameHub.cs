@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-
+using Newtonsoft.Json;
 public class GameHub : Hub
 {
 
@@ -8,13 +8,21 @@ public class GameHub : Hub
 
 
     public async Task RegisterPlayerOnline(string PlayerUserName){
+        
+         OnlinePlayers.Add(PlayerUserName,Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId,OnlinePlayersGroupName);
-        OnlinePlayers.Add(PlayerUserName,Context.ConnectionId);
+
     }
 
-    public async async DeRegisterPlayerOnline(string PlayerUserName){
+    public async Task DeRegisterPlayerOnline(string PlayerUserName){
         await Groups.RemoveFromGroupAsync(Context.ConnectionId,OnlinePlayersGroupName);
         OnlinePlayers.Remove(PlayerUserName);
+    }
+
+    public async Task SendAllOnlinePlayers(string UserName)
+    {
+        //string data = JsonConvert.SerializeObject(OnlinePlayers);
+        await Clients.All.SendAsync("ListOfOnlinePlayers",OnlinePlayers );  
     }
     public async Task SendDataToGroup(string data, string GroupName)
     {

@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 public class GameHub : Hub
 {
 
     const string OnlinePlayersGroupName ="OnlinePlayers";
-    public Dictionary<string,string> OnlinePlayers = new Dictionary<string,string>();
+    public static Dictionary<string,string> OnlinePlayers = new Dictionary<string,string>();
 
 
     public async Task RegisterPlayerOnline(string PlayerUserName){
@@ -19,10 +18,9 @@ public class GameHub : Hub
         OnlinePlayers.Remove(PlayerUserName);
     }
 
-    public async Task SendAllOnlinePlayers(string UserName)
+    public async Task SendAllOnlinePlayers(string PlayerUserName)
     {
-        //string data = JsonConvert.SerializeObject(OnlinePlayers);
-        await Clients.All.SendAsync("ListOfOnlinePlayers",OnlinePlayers );  
+         await Clients.Client(OnlinePlayers[PlayerUserName]).SendAsync("ListOfOnlinePlayers",OnlinePlayers);
     }
     public async Task SendDataToGroup(string data, string GroupName)
     {
@@ -40,12 +38,10 @@ public class GameHub : Hub
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, ChannelName);
     }
 
-    public async Task SendFriendRequest(string Name){
+    public async Task RelayFriendRequestData(string PlayerUsername,string TargetUsername,string RequestStatus){
         //To Do
+        Dictionary<string,string> FriendRequestData = new Dictionary<string, string>();
+        FriendRequestData.Add(PlayerUsername,RequestStatus);
+        await Clients.Client(OnlinePlayers[TargetUsername]).SendAsync("FriendRequestData",FriendRequestData);
     }
-
-    public async Task SendBackConfirmation(string Name){
-        //To Do
-    }
-
 }

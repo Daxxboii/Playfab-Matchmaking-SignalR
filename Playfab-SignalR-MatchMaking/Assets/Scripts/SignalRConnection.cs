@@ -45,15 +45,50 @@ public class SignalRConnection : MonoBehaviour
         {
             dynamic DeserializedData = JsonConvert.DeserializeObject(data);
             Debug.Log("List of players:");
-            Debug.Log(DeserializedData);
         });
-
+       
         connection.On<Dictionary<string,string>>("ListOfOnlinePlayers", (data) =>
         {
-          //  dynamic DeserializeData = JsonConvert.DeserializeObject(data);
-            Debug.Log(data);
+            Debug.Log("SuccessFully Updated List Of Online Players, " + data.Count + " Player(s) Online");
+            GameplayMenuManager.OnlinePlayers = new List<string>();
+
+            foreach (KeyValuePair<string, string> kvp in data)
+            {
+                GameplayMenuManager.OnlinePlayers.Add(kvp.Key);
+            }
         });
 
+
+        connection.On<Dictionary<string,string>>("FriendRequestData", (data) =>
+        {
+            foreach (KeyValuePair<string, string> kvp in data)
+            {
+                string key = kvp.Key;
+                switch(kvp.Value){
+                    case "Sending":
+                    Debug.Log(key);
+                    GameplayMenuManager.instance.WriteFriendRequests(key);
+                    Debug.Log("FriendRequestData Received");
+                    break;
+
+                    case "Declined":
+
+                    foreach(PlayerDataPanel panel in GameplayMenuManager.AllFriendRequests){
+                        
+                        GameplayMenuManager.AllFriendRequests.Remove(panel);
+                        if(panel.Username==key)
+                        {
+                            Destroy(panel.gameObject);
+                        }
+                    }
+                    break;
+
+                    case "Accepted":
+                    PlayFabManager.instance.AddFriend(key);
+                    break;
+                }
+            }
+        });
     }
 
    public async void AddToQueue(string Queue){
@@ -63,20 +98,21 @@ public class SignalRConnection : MonoBehaviour
    }
 
    public async void RegisterOnline(){
-        Debug.Log(PlayFabManager.PlayerUsername);
-    await connection.InvokeAsync<string>("RegisterPlayerOnline",PlayFabManager.PlayerUsername);
+        await connection.InvokeAsync<string>("RegisterPlayerOnline",PlayFabManager.PlayerUsername);
         Debug.Log("player Online");
    }
 
-   public async void SendFriendRequest(string Name){
 
+   public async void RelayFriendRequestData(string Username,string TargetUserName,string Status) // Make Sure Status is either set to Sending ,Declined or Accepted
+   {
+    await connection.InvokeAsync<string>("RelayFriendRequestData",Username,TargetUserName,Status);
    }
 
-    [ButtonMethod]
+    [ButtonMethod] //For Testing in inspector panel
     public async void FetchAllOnlinePlayers()
     {
         await connection.InvokeAsync<string>("SendAllOnlinePlayers", PlayFabManager.PlayerUsername);
-
+        GameplayMenuManager.instance.WriteGlobalList();
     }
 
 

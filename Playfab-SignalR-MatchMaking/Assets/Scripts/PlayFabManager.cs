@@ -80,7 +80,7 @@ public class PlayFabManager : MonoBehaviour
     }
     #endregion
 
-    public void OnFriendRequestAccepted(string name)
+    public void AddFriend(string name)
     {
         var request = new AddFriendRequest { FriendTitleDisplayName = name };
         PlayFabClientAPI.AddFriend(request, OnFriendAddedSuccess, PlayFabErrorLog);
@@ -88,9 +88,16 @@ public class PlayFabManager : MonoBehaviour
 
     void OnFriendAddedSuccess(AddFriendResult result) 
     { 
-    
+        Debug.Log("Added Friend!");
     }
 
+    public void GetFriendList(){
+        PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest {
+        IncludeSteamFriends = false,
+        IncludeFacebookFriends = false,
+        XboxToken = null
+    }, result => {GameplayMenuManager.instance.WriteFriendList(result.Friends);}, PlayFabErrorLog);
+    }
     void PlayFabErrorLog(PlayFabError error)
     {
         UnityEngine.Debug.LogError(error);

@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 public class PlayFabManager : MonoBehaviour
 {
     public static PlayFabManager instance;
-    public static string EntityId,SessionTicket;
+    public static string EntityId,SessionTicket,EntityToken;
     string encryptedPassword;
 
     public static string PlayerUsername;
@@ -73,6 +73,7 @@ public class PlayFabManager : MonoBehaviour
     {
         SessionTicket = login.SessionTicket;
         EntityId = login.EntityToken.Entity.Id;
+        EntityToken = login.EntityToken.EntityToken;
         Debug.Log("Logged In SuccessFully");
         PlayerUsername = login.InfoResultPayload.PlayerProfile.DisplayName;
         SignalRConnection.instance.RegisterOnline();

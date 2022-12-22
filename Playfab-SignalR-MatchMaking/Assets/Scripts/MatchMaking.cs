@@ -20,7 +20,7 @@ public class MatchMaking : MonoBehaviour
 
     private Coroutine pollTicketCoroutine;
 
-    public static bool IsHost;
+    public static bool IsHost; //Determines whether player is host and can start matchmaking , set to true when creating playfab party
 
 
     private void Awake()
@@ -67,6 +67,10 @@ public class MatchMaking : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called When a player receives a Ticket ID through SignalR
+    /// </summary>
+
     public void JoinMatchmakingQueue()
     {
         PlayFabMultiplayerAPI.JoinMatchmakingTicket(new JoinMatchmakingTicketRequest
@@ -108,7 +112,11 @@ public class MatchMaking : MonoBehaviour
         Debug.Log("MatchMaking Started");
     }
 
-
+    /// <summary>
+    /// Poll Ticket every 6 seconds to determine matchmaking status
+    /// </summary>
+    /// <param name="ticketId"></param>
+    /// <returns></returns>
     private IEnumerator PollTicket(string ticketId)
     {
         while (true)
@@ -166,6 +174,8 @@ public class MatchMaking : MonoBehaviour
     {
         Debug.LogError(error.GenerateErrorReport());
     }
+
+
     [ButtonMethod]
     public void LeaveQueue()
     {

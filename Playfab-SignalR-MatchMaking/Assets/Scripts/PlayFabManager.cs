@@ -12,7 +12,8 @@ using Newtonsoft.Json;
 
 public class PlayFabManager : MonoBehaviour
 {
-    public static PlayFabManager instance;
+    public static PlayFabManager instance; //Singleton
+
     public static string EntityId,SessionTicket,EntityToken;
     string encryptedPassword;
 
@@ -81,6 +82,8 @@ public class PlayFabManager : MonoBehaviour
     }
     #endregion
 
+
+
     public void AddFriend(string name)
     {
         var request = new AddFriendRequest { FriendTitleDisplayName = name };
@@ -92,6 +95,9 @@ public class PlayFabManager : MonoBehaviour
         Debug.Log("Added Friend!");
     }
 
+    /// <summary>
+    /// Fetches Friend List from PlayFab , enabel includesteamfriends to include steam friendlist
+    /// </summary>
     public void GetFriendList(){
         PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest {
         IncludeSteamFriends = false,

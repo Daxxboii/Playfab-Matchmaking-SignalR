@@ -2,6 +2,7 @@
 - A way for users to get realtime friend request notifications using SignalR and PlayFab as the backend services
 - Allowing PlayFab users to create/join a party for matchmaking
 - Allowing players to access and inspect all the online players globally within the title data in real time
+- Allowing players to access and download updated files through ```UnityFileDownloader.cs``` 
 
 > Note : The project only supports real time friend requests (Only when the target player is online) , to bypass this you can add a notification caching system that serves the notifications to the client on login 
 
@@ -21,5 +22,7 @@
 - Add the CDN link in ```config.cs``` 
 - Add Developer SecretKey and Title Id in ```PlayFabSharedSettings```
 - Download and import Party SDK
-> Link to the downloader [here](https://github.com/jpgordon00/UnityFileDownloader.git)
-> Link to party SDK [here](https://github.com/PlayFab/PlayFabPartyUnity)
+
+## External Links
+- Link to the downloader [here](https://github.com/jpgordon00/UnityFileDownloader.git)
+- Link to party SDK [here](https://github.com/PlayFab/PlayFabPartyUnity)

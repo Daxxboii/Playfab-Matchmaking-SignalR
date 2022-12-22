@@ -1,18 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyBox;
 
 public class CdnTesting : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public string Key;
+    [ReadOnly] public string Url;
+
+    [ButtonMethod]
+    public void GenerateUrl()
     {
-        
+        Url = Utilities.GetUrlFromKey(config.CDN,Key);
     }
 
-    // Update is called once per frame
-    void Update()
+    [ButtonMethod]
+    public void Validate()
     {
-        
+        if (Utilities.ValidateUri(Url))
+        {
+            Debug.Log("200");
+        }
+        else
+        {
+            Debug.Log("DoesNotExist");
+        }
     }
 }

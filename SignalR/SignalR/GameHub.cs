@@ -39,9 +39,20 @@ public class GameHub : Hub
     }
 
     public async Task RelayFriendRequestData(string PlayerUsername,string TargetUsername,string RequestStatus){
-        //To Do
+       
         Dictionary<string,string> FriendRequestData = new Dictionary<string, string>();
         FriendRequestData.Add(PlayerUsername,RequestStatus);
         await Clients.Client(OnlinePlayers[TargetUsername]).SendAsync("FriendRequestData",FriendRequestData);
+    }
+
+    public async Task OnPartyInvite(string PlayerUsername,string TargetUsername,string NetworkId){
+         Dictionary<string,string> PartyInviteData = new Dictionary<string, string>();
+        PartyInviteData.Add(PlayerUsername,NetworkId);
+        await Clients.Client(OnlinePlayers[TargetUsername]).SendAsync("PartyInvite",PartyInviteData);
+    }
+
+    public async Task SendTicketID(string TargetUsername,string TicketID){
+        await Clients.Client(OnlinePlayers[TargetUsername]).SendAsync("TicketID",TicketID);
+
     }
 }

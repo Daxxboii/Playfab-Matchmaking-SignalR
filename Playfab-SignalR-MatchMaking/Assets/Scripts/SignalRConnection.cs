@@ -32,12 +32,12 @@ public class SignalRConnection : MonoBehaviour
     // Connect to the SignalR server
     public async void Connect()
     {
-       connection = new HubConnectionBuilder().WithUrl(uri).Build();
-       Debug.Log("Connecting to SignalR");
+        connection = new HubConnectionBuilder().WithUrl(uri).Build();
+        Debug.Log("Connecting to SignalR");
 
-       await connection.StartAsync();
+        await connection.StartAsync();
 
-       Debug.Log("SignalR Connection Esthabished");
+        Debug.Log("SignalR Connection Esthabished");
 
 
         //On Recieving Public Data
@@ -46,8 +46,8 @@ public class SignalRConnection : MonoBehaviour
             dynamic DeserializedData = JsonConvert.DeserializeObject(data);
             Debug.Log("List of players:");
         });
-       
-        connection.On<Dictionary<string,string>>("ListOfOnlinePlayers", (data) =>
+
+        connection.On<Dictionary<string, string>>("ListOfOnlinePlayers", (data) =>
         {
             Debug.Log("SuccessFully Updated List Of Online Players, " + data.Count + " Player(s) Online");
             GameplayMenuManager.OnlinePlayers = new List<string>();
@@ -58,36 +58,56 @@ public class SignalRConnection : MonoBehaviour
             }
         });
 
+        connection.On<Dictionary<string, string>>("OnPartyInvite", (data =>
+        {
+            //add code here if you dont want to auto accept requests
 
-        connection.On<Dictionary<string,string>>("FriendRequestData", (data) =>
+            foreach (KeyValuePair<string, string> kvp in data)
+            {
+                Debug.Log("Recieved PartyInvite from" + kvp.Key + ", Auto Accepted");
+                PlayFabParty.instance.JoinNetwork(kvp.Value);
+                MatchMaking.IsHost = false;
+            }
+        }));
+
+        connection.On<Dictionary<string, string>>("FriendRequestData", (data) =>
         {
             foreach (KeyValuePair<string, string> kvp in data)
             {
                 string key = kvp.Key;
-                switch(kvp.Value){
+                switch (kvp.Value)
+                {
                     case "Sending":
-                    Debug.Log(key);
-                    GameplayMenuManager.instance.WriteFriendRequests(key);
-                    Debug.Log("FriendRequestData Received");
-                    break;
+                        Debug.Log(key);
+                        GameplayMenuManager.instance.WriteFriendRequests(key);
+                        Debug.Log("FriendRequestData Received");
+                        break;
 
                     case "Declined":
 
-                    foreach(PlayerDataPanel panel in GameplayMenuManager.AllFriendRequests){
-                        
-                        GameplayMenuManager.AllFriendRequests.Remove(panel);
-                        if(panel.Username==key)
+                        foreach (PlayerDataPanel panel in GameplayMenuManager.AllFriendRequests)
                         {
-                            Destroy(panel.gameObject);
+
+                            GameplayMenuManager.AllFriendRequests.Remove(panel);
+                            if (panel.Username == key)
+                            {
+                                Destroy(panel.gameObject);
+                            }
                         }
-                    }
-                    break;
+                        break;
 
                     case "Accepted":
-                    PlayFabManager.instance.AddFriend(key);
-                    break;
+                        PlayFabManager.instance.AddFriend(key);
+                        break;
                 }
             }
+        });
+
+        connection.On<string>("TicketID", (data) =>
+        {
+            MatchMaking.instance.TicketID = data;
+            MatchMaking.instance.JoinMatchmakingQueue();
+            MatchMaking.IsHost = false;
         });
     }
 
@@ -113,6 +133,18 @@ public class SignalRConnection : MonoBehaviour
     {
         await connection.InvokeAsync<string>("SendAllOnlinePlayers", PlayFabManager.PlayerUsername);
         GameplayMenuManager.instance.WriteGlobalList();
+    }
+
+    public async void InviteToParty(string Username,string TargetUserName,string NetworkId)
+    {
+        MatchMaking.IsHost = true;
+        PlayFabParty.instance.CreateNetwork();
+        await connection.InvokeAsync<string>("OnPartyInvite", PlayFabManager.PlayerUsername,TargetUserName,PlayFabParty.NetworkID);
+    }
+
+    public async void SendTicketID( string TargetUserName, string TicketID)
+    {
+        await connection.InvokeAsync<string>("SendTicketID",TargetUserName, TicketID);
     }
 
 

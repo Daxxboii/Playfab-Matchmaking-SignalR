@@ -1,0 +1,2 @@
+/PlayFabPartyMacOS filter=lfs diff=lfs merge=lfs -text
+C:/Users/Daxx/Desktop/Playfab-Matchmaking-SignalR/Playfab-SignalR-MatchMaking/Assets/PlayFabPartySDK/Source/DLLs/Apple/macOS/PlayFabPartyMacOS.bundle.dSYM/Contents/Resources/DWARF/PlayFabPartyMacOS filter=lfs diff=lfs merge=lfs -text

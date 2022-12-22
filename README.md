@@ -14,9 +14,12 @@
 ## Future Updates
 
 - Polling notifications for offline users
+- Adding UI Scene for matchmaking
 
 ## To-Do
 
 - Add the CDN link in ```config.cs``` 
 - Add Developer SecretKey and Title Id in ```PlayFabSharedSettings```
+- Download and import Party SDK
 > Link to the downloader [here](https://github.com/jpgordon00/UnityFileDownloader.git)
+> Link to party SDK [here](https://github.com/PlayFab/PlayFabPartyUnity)

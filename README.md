@@ -5,13 +5,18 @@
 
 > Note : The project only supports real time friend requests (Only when the target player is online) , to bypass this you can add a notification caching system that serves the notifications to the client on login 
 
-# What does it do?
+## What does it do?
 - Enables a player to accept/decine/send a friend requests to other players via SignalR
 - Enables a player to send a party invite to a friend for matchmaking
 
 > Note : The matchmaking part is handled by PlayFab
 
-# Future Updates
+## Future Updates
 
 - Polling notifications for offline users
 
+## To-Do
+
+- Add the CDN link in ```config.cs``` 
+- Add Developer SecretKey and Title Id in ```PlayFabSharedSettings```
+> Link to the downloader [here](https://github.com/jpgordon00/UnityFileDownloader.git)
